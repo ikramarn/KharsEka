@@ -3,6 +3,7 @@ import cors from '@fastify/cors';
 import jwtPlugin from '@fastify/jwt';
 import pkg from 'pg';
 import bcrypt from 'bcryptjs';
+import client from 'prom-client';
 
 const { Pool } = pkg;
 const PORT = process.env.PORT || 3001;
@@ -26,6 +27,8 @@ async function ensureSchema() {
 }
 
 const app = Fastify({ logger: true });
+const registry = new client.Registry();
+client.collectDefaultMetrics({ register: registry });
 await app.register(cors, { origin: true, credentials: true });
 await app.register(jwtPlugin, { secret: JWT_SECRET });
 
@@ -80,5 +83,9 @@ app.patch('/users/me', { preHandler: [app.auth] }, async (req) => {
 });
 
 app.get('/healthz', async () => ({ ok: true }));
+app.get('/metrics', async (req, reply) => {
+  reply.header('Content-Type', registry.contentType);
+  return registry.metrics();
+});
 
 ensureSchema().then(() => app.listen({ port: PORT, host: '0.0.0.0' }));

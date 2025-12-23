@@ -12,11 +12,16 @@ spec:
       - name: auth
         image: auth-service:local
         imagePullPolicy: IfNotPresent
-        env:
-        - name: DATABASE_URL
-          value: postgres://postgres:postgres@postgres:5432/market
-        - name: JWT_SECRET
-          value: devsecret
+        envFrom:
+        - secretRef:
+            name: backend-secrets
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
         ports:
         - containerPort: 3001
         readinessProbe:
@@ -52,11 +57,16 @@ spec:
       - name: listings
         image: listings-service:local
         imagePullPolicy: IfNotPresent
-        env:
-        - name: DATABASE_URL
-          value: postgres://postgres:postgres@postgres:5432/market
-        - name: JWT_SECRET
-          value: devsecret
+        envFrom:
+        - secretRef:
+            name: backend-secrets
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
         ports:
         - containerPort: 3002
         readinessProbe:
@@ -92,11 +102,16 @@ spec:
       - name: favorites
         image: favorites-service:local
         imagePullPolicy: IfNotPresent
-        env:
-        - name: DATABASE_URL
-          value: postgres://postgres:postgres@postgres:5432/market
-        - name: JWT_SECRET
-          value: devsecret
+        envFrom:
+        - secretRef:
+            name: backend-secrets
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
         ports:
         - containerPort: 3003
         readinessProbe:
@@ -132,11 +147,19 @@ spec:
       - name: media
         image: media-service:local
         imagePullPolicy: IfNotPresent
+        envFrom:
+        - secretRef:
+            name: backend-secrets
         env:
-        - name: JWT_SECRET
-          value: devsecret
         - name: UPLOAD_DIR
           value: /data/uploads
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
         ports:
         - containerPort: 3004
         readinessProbe:
@@ -152,7 +175,8 @@ spec:
           mountPath: /data/uploads
       volumes:
       - name: uploads
-        emptyDir: {}
+        persistentVolumeClaim:
+          claimName: uploads-pvc
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -179,6 +203,13 @@ spec:
           value: http://media-service:3004
         ports:
         - containerPort: 3000
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
         readinessProbe:
           httpGet: { path: /healthz, port: 3000 }
           initialDelaySeconds: 5
