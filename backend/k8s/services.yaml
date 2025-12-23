@@ -1,0 +1,160 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-service
+spec:
+  replicas: 1
+  selector: { matchLabels: { app: auth-service } }
+  template:
+    metadata: { labels: { app: auth-service } }
+    spec:
+      containers:
+      - name: auth
+        image: auth-service:local
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: DATABASE_URL
+          value: postgres://postgres:postgres@postgres:5432/market
+        - name: JWT_SECRET
+          value: devsecret
+        ports:
+        - containerPort: 3001
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth-service
+spec:
+  selector: { app: auth-service }
+  ports:
+  - port: 3001
+    targetPort: 3001
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: listings-service
+spec:
+  replicas: 1
+  selector: { matchLabels: { app: listings-service } }
+  template:
+    metadata: { labels: { app: listings-service } }
+    spec:
+      containers:
+      - name: listings
+        image: listings-service:local
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: DATABASE_URL
+          value: postgres://postgres:postgres@postgres:5432/market
+        - name: JWT_SECRET
+          value: devsecret
+        ports:
+        - containerPort: 3002
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: listings-service
+spec:
+  selector: { app: listings-service }
+  ports:
+  - port: 3002
+    targetPort: 3002
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: favorites-service
+spec:
+  replicas: 1
+  selector: { matchLabels: { app: favorites-service } }
+  template:
+    metadata: { labels: { app: favorites-service } }
+    spec:
+      containers:
+      - name: favorites
+        image: favorites-service:local
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: DATABASE_URL
+          value: postgres://postgres:postgres@postgres:5432/market
+        - name: JWT_SECRET
+          value: devsecret
+        ports:
+        - containerPort: 3003
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: favorites-service
+spec:
+  selector: { app: favorites-service }
+  ports:
+  - port: 3003
+    targetPort: 3003
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: media-service
+spec:
+  replicas: 1
+  selector: { matchLabels: { app: media-service } }
+  template:
+    metadata: { labels: { app: media-service } }
+    spec:
+      containers:
+      - name: media
+        image: media-service:local
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: JWT_SECRET
+          value: devsecret
+        - name: UPLOAD_DIR
+          value: /data/uploads
+        ports:
+        - containerPort: 3004
+        volumeMounts:
+        - name: uploads
+          mountPath: /data/uploads
+      volumes:
+      - name: uploads
+        emptyDir: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-gateway
+spec:
+  replicas: 1
+  selector: { matchLabels: { app: api-gateway } }
+  template:
+    metadata: { labels: { app: api-gateway } }
+    spec:
+      containers:
+      - name: gateway
+        image: api-gateway:local
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: AUTH_URL
+          value: http://auth-service:3001
+        - name: LISTINGS_URL
+          value: http://listings-service:3002
+        - name: FAVORITES_URL
+          value: http://favorites-service:3003
+        - name: MEDIA_URL
+          value: http://media-service:3004
+        ports:
+        - containerPort: 3000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: api-gateway
+spec:
+  type: LoadBalancer
+  selector: { app: api-gateway }
+  ports:
+  - port: 80
+    targetPort: 3000
