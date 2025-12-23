@@ -3,9 +3,11 @@ import { View, TextInput, FlatList, StyleSheet, Text, RefreshControl } from 'rea
 import ListingCard from '../components/ListingCard';
 import CategoryPicker, { CATEGORIES } from '../components/CategoryPicker';
 import { api } from '../api/client';
+import { useAuth } from '../context/AuthContext';
 
 // Placeholder local state; swap for Firestore queries
 export default function HomeScreen({ navigation }) {
+  const { token } = useAuth();
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState(CATEGORIES[0]);
   const [items, setItems] = useState([]);
@@ -33,7 +35,7 @@ export default function HomeScreen({ navigation }) {
           <ListingCard
             item={item}
             onPress={() => navigation.navigate('ListingDetail', { id: item.id })}
-            onFavorite={() => {}}
+            onFavorite={() => token && api.addFavorite(token, item.id)}
           />
         )}
         refreshControl={<RefreshControl refreshing={false} onRefresh={load} />}
