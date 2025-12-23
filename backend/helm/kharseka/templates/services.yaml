@@ -10,6 +10,13 @@ spec:
   template:
     metadata: { labels: { app: auth-service } }
     spec:
+      initContainers:
+      - name: wait-for-postgres
+        image: postgres:16-alpine
+        command: ["sh","-c"]
+        args:
+          - >-
+            until pg_isready -h postgres -p 5432 -d market -U postgres; do echo waiting for postgres; sleep 2; done
       containers:
       - name: auth
         image: {{ .Values.services.auth.image }}:{{ .Values.services.auth.tag }}
@@ -45,6 +52,13 @@ spec:
   template:
     metadata: { labels: { app: listings-service } }
     spec:
+      initContainers:
+      - name: wait-for-postgres
+        image: postgres:16-alpine
+        command: ["sh","-c"]
+        args:
+          - >-
+            until pg_isready -h postgres -p 5432 -d market -U postgres; do echo waiting for postgres; sleep 2; done
       containers:
       - name: listings
         image: {{ .Values.services.listings.image }}:{{ .Values.services.listings.tag }}
@@ -80,6 +94,13 @@ spec:
   template:
     metadata: { labels: { app: favorites-service } }
     spec:
+      initContainers:
+      - name: wait-for-postgres
+        image: postgres:16-alpine
+        command: ["sh","-c"]
+        args:
+          - >-
+            until pg_isready -h postgres -p 5432 -d market -U postgres; do echo waiting for postgres; sleep 2; done
       containers:
       - name: favorites
         image: {{ .Values.services.favorites.image }}:{{ .Values.services.favorites.tag }}
