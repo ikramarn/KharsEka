@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, Button, Image, StyleSheet, Alert } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { useAuth } from '../context/AuthContext';
+import { uploadImages } from '../api/client';
 
 export default function ProfileScreen() {
   const { user, signOut, updateUserProfile } = useAuth();
@@ -13,8 +14,10 @@ export default function ProfileScreen() {
       const uri = res.assets[0].uri;
       try {
         setUploading(true);
-        // TODO: upload to Firebase Storage and set photoURL
-        await updateUserProfile({ photoURL: uri });
+        // Upload to media service then set profile photo URL
+        const out = await uploadImages(token, [uri]);
+        const photoURL = out.urls?.[0];
+        await updateUserProfile({ photoURL });
         Alert.alert('Updated', 'Profile photo updated');
       } catch (e) {
         Alert.alert('Error', e.message || 'Failed to upload');

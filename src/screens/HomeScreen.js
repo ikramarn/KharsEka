@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { View, TextInput, FlatList, StyleSheet, Text } from 'react-native';
+import { View, TextInput, FlatList, StyleSheet, Text, RefreshControl } from 'react-native';
 import ListingCard from '../components/ListingCard';
 import CategoryPicker, { CATEGORIES } from '../components/CategoryPicker';
+import { api } from '../api/client';
 
 // Placeholder local state; swap for Firestore queries
 export default function HomeScreen({ navigation }) {
@@ -9,15 +10,16 @@ export default function HomeScreen({ navigation }) {
   const [category, setCategory] = useState(CATEGORIES[0]);
   const [items, setItems] = useState([]);
 
-  useEffect(() => {
-    // TODO: Fetch from Firestore
-    setItems([]);
-  }, []);
+  async function load() {
+    const data = await api.listListings({ category, q: query });
+    setItems(data);
+  }
 
-  const filtered = items.filter((i) =>
-    i.category === category &&
-    (i.title?.toLowerCase().includes(query.toLowerCase()) || i.description?.toLowerCase().includes(query.toLowerCase()))
-  );
+  useEffect(() => {
+    load();
+  }, [category, query]);
+
+  const filtered = items; // server already applies filters
 
   return (
     <View style={styles.container}>
@@ -34,6 +36,7 @@ export default function HomeScreen({ navigation }) {
             onFavorite={() => {}}
           />
         )}
+        refreshControl={<RefreshControl refreshing={false} onRefresh={load} />}
         ListEmptyComponent={<Text style={{ textAlign: 'center', marginTop: 24 }}>No listings yet.</Text>}
       />
     </View>

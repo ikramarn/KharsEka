@@ -1,18 +1,31 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, Image, StyleSheet, ScrollView, Button, Alert } from 'react-native';
+import { api } from '../api/client';
+import { useAuth } from '../context/AuthContext';
 
-export default function ListingDetailScreen({ route }) {
+export default function ListingDetailScreen({ route, navigation }) {
   const { id } = route.params || {};
-  const item = null; // TODO: fetch by id
-  const isOwner = false; // TODO: compare with auth user
+  const { user, token } = useAuth();
+  const [item, setItem] = useState(null);
+  const isOwner = item && user && item.user_id === (user.id || user.uid);
+
+  useEffect(() => {
+    (async () => {
+      const data = await api.getListing(id);
+      setItem(data);
+    })();
+  }, [id]);
 
   const markSold = async () => {
-    // TODO: update Firestore
+    await api.patchListing(token, id, { sold: true });
     Alert.alert('Updated', 'Marked as sold');
+    const data = await api.getListing(id);
+    setItem(data);
   };
   const deleteListing = async () => {
-    // TODO: delete in Firestore and storage
+    await api.deleteListing(token, id);
     Alert.alert('Deleted', 'Listing removed');
+    navigation.goBack();
   };
 
   if (!item) return <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}><Text>Loading...</Text></View>;

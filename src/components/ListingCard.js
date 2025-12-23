@@ -5,7 +5,7 @@ export default function ListingCard({ item, onPress, onFavorite }) {
   return (
     <TouchableOpacity onPress={onPress} style={styles.card}>
       {item.images?.[0] && (
-        <Image source={{ uri: item.images[0] }} style={styles.thumb} />
+        <Image source={{ uri: absolutize(item.images[0]) }} style={styles.thumb} />
       )}
       <View style={{ flex: 1 }}>
         <Text style={styles.title}>{item.title}</Text>
@@ -19,6 +19,13 @@ export default function ListingCard({ item, onPress, onFavorite }) {
       )}
     </TouchableOpacity>
   );
+}
+
+function absolutize(url) {
+  if (!url) return url;
+  if (url.startsWith('http')) return url;
+  const base = process.env.EXPO_PUBLIC_API_BASE_URL || 'http://localhost:8080';
+  return `${base}${url}`;
 }
 
 const styles = StyleSheet.create({

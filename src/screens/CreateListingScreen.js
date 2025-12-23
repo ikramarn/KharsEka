@@ -2,8 +2,11 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Image, ScrollView, Alert } from 'react-native';
 import CategoryPicker from '../components/CategoryPicker';
 import * as ImagePicker from 'expo-image-picker';
+import { useAuth } from '../context/AuthContext';
+import { uploadImages, api } from '../api/client';
 
 export default function CreateListingScreen() {
+  const { token } = useAuth();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
@@ -40,7 +43,9 @@ export default function CreateListingScreen() {
     if (err) return Alert.alert('Validation', err);
     setSaving(true);
     try {
-      // TODO: Upload images to Firebase Storage and save listing in Firestore
+      const { urls } = await uploadImages(token, images);
+      const payload = { title, description, price, category, images: urls };
+      await api.createListing(token, payload);
       Alert.alert('Saved', 'Listing created');
       setTitle('');
       setDescription('');
