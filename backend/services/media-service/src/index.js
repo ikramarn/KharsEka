@@ -38,4 +38,6 @@ app.post('/media/upload', { preHandler: [app.auth] }, async (req, reply) => {
   return { urls };
 });
 
+app.get('/healthz', async () => ({ ok: true }));
+
 app.listen({ port: PORT, host: '0.0.0.0' });

@@ -79,4 +79,6 @@ app.patch('/users/me', { preHandler: [app.auth] }, async (req) => {
   return rows[0];
 });
 
+app.get('/healthz', async () => ({ ok: true }));
+
 ensureSchema().then(() => app.listen({ port: PORT, host: '0.0.0.0' }));

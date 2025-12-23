@@ -44,4 +44,6 @@ app.delete('/favorites/:listingId', { preHandler: [app.auth] }, async (req) => {
   return { ok: true };
 });
 
+app.get('/healthz', async () => ({ ok: true }));
+
 ensureSchema().then(() => app.listen({ port: PORT, host: '0.0.0.0' }));
