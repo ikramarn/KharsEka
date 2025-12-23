@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import { uploadImages } from '../api/client';
 
 export default function ProfileScreen() {
-  const { user, signOut, updateUserProfile } = useAuth();
+  const { user, token, signOut, updateUserProfile } = useAuth();
   const [uploading, setUploading] = useState(false);
 
   const uploadPhoto = async () => {

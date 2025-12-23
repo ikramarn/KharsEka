@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, TextInput, FlatList, StyleSheet, Text, RefreshControl } from 'react-native';
+import { View, TextInput, FlatList, StyleSheet, Text, RefreshControl, Button } from 'react-native';
 import ListingCard from '../components/ListingCard';
 import CategoryPicker, { CATEGORIES } from '../components/CategoryPicker';
 import { api } from '../api/client';
@@ -26,6 +26,9 @@ export default function HomeScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Browse Listings</Text>
+      <View style={{ marginBottom: 12 }}>
+        <Button title="Create Listing" onPress={() => navigation.navigate('Create')} />
+      </View>
       <CategoryPicker value={category} onChange={setCategory} />
       <TextInput placeholder="Search..." value={query} onChangeText={setQuery} style={styles.search} />
       <FlatList

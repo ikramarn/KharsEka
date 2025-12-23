@@ -45,7 +45,7 @@ export const api = {
 };
 
 export async function uploadImages(token, uris = []) {
-  const base = process.env.EXPO_PUBLIC_API_BASE_URL || 'http://localhost:8080';
+  const base = process.env.EXPO_PUBLIC_API_BASE_URL || Constants?.expoConfig?.extra?.apiBaseUrl || 'http://localhost:8080';
   const form = new FormData();
   uris.forEach((uri, i) => {
     const name = `photo_${i}.jpg`;
@@ -57,5 +57,7 @@ export async function uploadImages(token, uris = []) {
     body: form,
   });
   if (!res.ok) throw new Error('Upload failed');
-  return res.json();
+  const out = await res.json();
+  const urls = Array.isArray(out.urls) ? out.urls.map((u) => (u.startsWith('http') ? u : `${base}${u}`)) : [];
+  return { urls };
 }
