@@ -1,0 +1,41 @@
+{{- if .Values.hpa.gateway.enabled }}
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: api-gateway-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: api-gateway
+  minReplicas: {{ .Values.hpa.gateway.minReplicas }}
+  maxReplicas: {{ .Values.hpa.gateway.maxReplicas }}
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: {{ .Values.hpa.gateway.targetCPUUtilizationPercentage }}
+{{- end }}
+---
+{{- if .Values.hpa.listings.enabled }}
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: listings-service-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: listings-service
+  minReplicas: {{ .Values.hpa.listings.minReplicas }}
+  maxReplicas: {{ .Values.hpa.listings.maxReplicas }}
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: {{ .Values.hpa.listings.targetCPUUtilizationPercentage }}
+{{- end }}

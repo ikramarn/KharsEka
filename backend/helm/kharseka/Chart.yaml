@@ -1,0 +1,6 @@
+apiVersion: v2
+name: kharseka
+version: 0.1.0
+description: Helm chart for KharsEka microservices (gateway, auth, listings, favorites, media, postgres)
+type: application
+appVersion: "0.1.0"
