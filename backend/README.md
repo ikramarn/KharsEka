@@ -28,7 +28,9 @@ $root = (Get-Location)
 
 ```powershell
 kubectl apply -f k8s/postgres.yaml
+kubectl apply -f k8s/secrets.yaml
 kubectl apply -f k8s/services.yaml
+kubectl apply -f k8s/hpa.yaml
 ```
 
 3) Get gateway endpoint:
@@ -48,6 +50,15 @@ curl http://localhost:8080/healthz
 ```
 
 ## Notes
-- JWT secret is set to `devsecret` in manifests. Change for production.
-- Media uploads are stored in an ephemeral volume (EmptyDir). For production, back by a PersistentVolume or S3-compatible storage.
-- Postgres has a 2Gi PVC.
+- Secrets: Set `backend-secrets` values in [k8s/secrets.yaml](backend/k8s/secrets.yaml). Do NOT commit real secrets.
+- Media storage: Backed by `uploads-pvc` (2Gi). For production, use cloud object storage (S3/GCS/Azure Blob).
+- Postgres: PVC `postgres-pvc` 2Gi.
+- HPA: Requires metrics-server installed. On Docker Desktop:
+	```powershell
+	kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+	```
+- Ingress: Install NGINX ingress controller to use [k8s/ingress.yaml](backend/k8s/ingress.yaml) or keep using LoadBalancer/port-forward:
+	```powershell
+	kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/cloud/deploy.yaml
+	```
+	Then map `kharseka.local` in your hosts file to 127.0.0.1 and create a TLS secret `kharseka-tls` (self-signed or dev cert).
