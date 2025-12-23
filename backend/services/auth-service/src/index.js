@@ -13,6 +13,7 @@ const pool = new Pool({ connectionString: DATABASE_URL });
 
 async function ensureSchema() {
   await pool.query(`
+  create extension if not exists pgcrypto;
   create table if not exists users (
     id uuid primary key default gen_random_uuid(),
     email text unique not null,
