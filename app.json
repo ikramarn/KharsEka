@@ -33,11 +33,8 @@
         "storageBucket": "",
         "messagingSenderId": "",
         "appId": ""
-      }
-    },
-    "plugins": [
       },
       "apiBaseUrl": "http://localhost:8080"
-    ]
+    }
   }
 }
