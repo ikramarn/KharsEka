@@ -1,5 +1,31 @@
 # Backend Microservices (Local Kubernetes on Docker Desktop)
 
+## Helm (recommended)
+Build local images (tags in values.yaml default to `local`), then install:
+
+```powershell
+cd backend
+helm upgrade --install kharseka helm/kharseka \
+	--set services.auth.tag=local \
+	--set services.listings.tag=local \
+	--set services.favorites.tag=local \
+	--set services.media.tag=local \
+	--set gateway.tag=local \
+	--set global.jwtSecret=devsecret \
+	--set global.databaseUrl="postgres://postgres:postgres@postgres:5432/market" \
+	--set ingress.enabled=false
+```
+
+Get services:
+```powershell
+kubectl get pods,svc
+```
+
+Port-forward gateway if needed:
+```powershell
+kubectl port-forward --address 0.0.0.0 svc/api-gateway 8080:80
+```
+
 Services:
 - api-gateway (port 80 via LoadBalancer)
 - auth-service (users, JWT auth)
