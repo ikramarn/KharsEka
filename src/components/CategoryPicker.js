@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 
+
 export const CATEGORIES = [
   'Vehicle',
   'Electronics',
@@ -10,6 +11,10 @@ export const CATEGORIES = [
   'Bikes',
   'Carparts',
 ];
+
+export const SUBCATEGORIES = {
+  Vehicle: ['Car', 'Truck'],
+};
 
 export default function CategoryPicker({ value, onChange }) {
   return (
