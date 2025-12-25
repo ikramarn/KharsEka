@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: listings-service
+  labels:
+    app: listings-service
+  annotations:
+    argocd-image-updater.argoproj.io/update-strategy: "latest"
+    argocd-image-updater.argoproj.io/listings: "${{ secrets.DOCKERHUB_USERNAME }}/kharseka-listings-service"
+spec:
+  replicas: {{ .Values.services.listings.replicas }}
+  selector:
+    matchLabels: { app: listings-service }
+  template:
+    metadata:
+      labels: { app: listings-service }
+    spec:
+      containers:
+      - name: listings-service
+        image: {{ .Values.services.listings.image }}:{{ .Values.services.listings.tag }}
+        imagePullPolicy: {{ .Values.global.imagePullPolicy }}
+        ports: [{ containerPort: 3002 }]
+        resources:
+{{ toYaml .Values.services.listings.resources | indent 10 }}
+        readinessProbe:
+          httpGet: { path: /healthz, port: 3002 }
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          httpGet: { path: /healthz, port: 3002 }
+          initialDelaySeconds: 10
+          periodSeconds: 20
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: listings-service
+spec:
+  type: ClusterIP
+  selector: { app: listings-service }
+  ports:
+  - port: 3002
+    targetPort: 3002
