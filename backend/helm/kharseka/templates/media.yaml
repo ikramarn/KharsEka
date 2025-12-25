@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: media-service
+  labels:
+    app: media-service
+  annotations:
+    argocd-image-updater.argoproj.io/update-strategy: "latest"
+    argocd-image-updater.argoproj.io/media: "${{ secrets.DOCKERHUB_USERNAME }}/kharseka-media-service"
+spec:
+  replicas: {{ .Values.services.media.replicas }}
+  selector:
+    matchLabels: { app: media-service }
+  template:
+    metadata:
+      labels: { app: media-service }
+    spec:
+      containers:
+      - name: media-service
+        image: {{ .Values.services.media.image }}:{{ .Values.services.media.tag }}
+        imagePullPolicy: {{ .Values.global.imagePullPolicy }}
+        ports: [{ containerPort: 3004 }]
+        resources:
+{{ toYaml .Values.services.media.resources | indent 10 }}
+        readinessProbe:
+          httpGet: { path: /healthz, port: 3004 }
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          httpGet: { path: /healthz, port: 3004 }
+          initialDelaySeconds: 10
+          periodSeconds: 20
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: media-service
+spec:
+  type: ClusterIP
+  selector: { app: media-service }
+  ports:
+  - port: 3004
+    targetPort: 3004
