@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import * as SecureStore from 'expo-secure-store';
+import { Platform } from 'react-native';
 import { api } from '../api/client';
 import { initializeApp } from 'firebase/app';
 import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, updateProfile } from 'firebase/auth';
@@ -37,6 +38,38 @@ export function AuthProvider({ children }) {
   const [token, setToken] = useState(null);
   const [initializing, setInitializing] = useState(true);
 
+  // Storage helpers: use SecureStore where available; fall back to localStorage on web
+  const storage = {
+    getItem: async (key) => {
+      try {
+        const available = await SecureStore.isAvailableAsync();
+        if (available) return await SecureStore.getItemAsync(key);
+      } catch {}
+      if (Platform.OS === 'web' && typeof window !== 'undefined') {
+        try { return window.localStorage.getItem(key); } catch {}
+      }
+      return null;
+    },
+    setItem: async (key, value) => {
+      try {
+        const available = await SecureStore.isAvailableAsync();
+        if (available) { await SecureStore.setItemAsync(key, value); return; }
+      } catch {}
+      if (Platform.OS === 'web' && typeof window !== 'undefined') {
+        try { window.localStorage.setItem(key, value); } catch {}
+      }
+    },
+    deleteItem: async (key) => {
+      try {
+        const available = await SecureStore.isAvailableAsync();
+        if (available) { await SecureStore.deleteItemAsync(key); return; }
+      } catch {}
+      if (Platform.OS === 'web' && typeof window !== 'undefined') {
+        try { window.localStorage.removeItem(key); } catch {}
+      }
+    },
+  };
+
   // If Firebase configured, use Firebase auth listener; else use JWT token path
   useEffect(() => {
     let unsub = () => {};
@@ -47,7 +80,7 @@ export function AuthProvider({ children }) {
           if (initializing) setInitializing(false);
         });
       } else {
-        const saved = await SecureStore.getItemAsync('auth_token');
+        const saved = await storage.getItem('auth_token');
         if (saved) {
           setToken(saved);
           try {
@@ -75,7 +108,7 @@ export function AuthProvider({ children }) {
       return;
     }
     const { token: tkn, user: u } = await api.signIn(email, password);
-    await SecureStore.setItemAsync('auth_token', tkn);
+    await storage.setItem('auth_token', tkn);
     setToken(tkn);
     setUser({ id: u.id, email: u.email, displayName: u.display_name, photoURL: u.photo_url });
   };
@@ -87,7 +120,7 @@ export function AuthProvider({ children }) {
       return;
     }
     const { token: tkn, user: u } = await api.signUp(email, password, displayName);
-    await SecureStore.setItemAsync('auth_token', tkn);
+    await storage.setItem('auth_token', tkn);
     setToken(tkn);
     setUser({ id: u.id, email: u.email, displayName: u.display_name, photoURL: u.photo_url });
   };
@@ -97,7 +130,7 @@ export function AuthProvider({ children }) {
       await signOut(auth);
       return;
     }
-    await SecureStore.deleteItemAsync('auth_token');
+    await storage.deleteItem('auth_token');
     setToken(null);
     setUser(null);
   };
