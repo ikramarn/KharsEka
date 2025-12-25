@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Image, ScrollView, Alert } from 'react-native';
-import CategoryPicker from '../components/CategoryPicker';
+import CategoryPicker, { SUBCATEGORIES } from '../components/CategoryPicker';
 import * as ImagePicker from 'expo-image-picker';
 import { useAuth } from '../context/AuthContext';
 import { uploadImages, api } from '../api/client';
@@ -11,6 +11,7 @@ export default function CreateListingScreen() {
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
   const [category, setCategory] = useState('Vehicle');
+  const [subcategory, setSubcategory] = useState('Car');
   const [images, setImages] = useState([]);
   const [saving, setSaving] = useState(false);
 
@@ -45,12 +46,14 @@ export default function CreateListingScreen() {
     try {
       const { urls } = await uploadImages(token, images);
       const payload = { title, description, price, category, images: urls };
+      if (category === 'Vehicle') payload.subcategory = subcategory;
       await api.createListing(token, payload);
       Alert.alert('Saved', 'Listing created');
       setTitle('');
       setDescription('');
       setPrice('');
       setCategory('Vehicle');
+      setSubcategory('Car');
       setImages([]);
     } catch (e) {
       Alert.alert('Error', e.message || 'Failed to save');
@@ -66,6 +69,16 @@ export default function CreateListingScreen() {
       <TextInput placeholder="Description" value={description} onChangeText={setDescription} style={[styles.input, { height: 100 }]} multiline />
       <TextInput placeholder="Price" keyboardType="numeric" value={price} onChangeText={setPrice} style={styles.input} />
       <CategoryPicker value={category} onChange={setCategory} />
+      {category === 'Vehicle' && (
+        <View style={{ marginBottom: 12 }}>
+          <Text style={{ fontWeight: '600', marginBottom: 4 }}>Subcategory</Text>
+          <Picker selectedValue={subcategory} onValueChange={setSubcategory}>
+            {SUBCATEGORIES.Vehicle.map((s) => (
+              <Picker.Item key={s} label={s} value={s} />
+            ))}
+          </Picker>
+        </View>
+      )}
       <Button title={`Add pictures (${images.length}/8)`} onPress={pickImages} />
       <View style={styles.imagesRow}>
         {images.map((uri) => (
