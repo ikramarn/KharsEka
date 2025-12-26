@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: media-service
-        image: {{ .Values.services.media.image }}:{{ .Values.services.media.tag }}
+        image: {{ .Values.services.media.image }}@{{ .Values.services.media.digest | default .Values.services.media.tag }}
         imagePullPolicy: {{ .Values.global.imagePullPolicy }}
         ports: [{ containerPort: 3004 }]
         resources:

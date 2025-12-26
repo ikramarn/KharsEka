@@ -4,8 +4,8 @@ metadata:
   name: listings-service
   labels:
     app: listings-service
-    annotations:
-      argocd-image-updater.argoproj.io/update-strategy: "digest"
+  annotations:
+    argocd-image-updater.argoproj.io/update-strategy: "digest"
 spec:
   replicas: {{ .Values.services.listings.replicas }}
   selector:
@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: listings-service
-        image: {{ .Values.services.listings.image }}:{{ .Values.services.listings.tag }}
+        image: {{ .Values.services.listings.image }}@{{ .Values.services.listings.digest | default .Values.services.listings.tag }}
         imagePullPolicy: {{ .Values.global.imagePullPolicy }}
         ports: [{ containerPort: 3002 }]
         resources:

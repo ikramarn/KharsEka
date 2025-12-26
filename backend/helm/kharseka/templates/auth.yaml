@@ -4,8 +4,8 @@ metadata:
   name: auth-service
   labels:
     app: auth-service
-    annotations:
-      argocd-image-updater.argoproj.io/update-strategy: "digest"
+  annotations:
+    argocd-image-updater.argoproj.io/update-strategy: "digest"
 spec:
   replicas: {{ .Values.services.auth.replicas }}
   selector:
@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: auth-service
-        image: {{ .Values.services.auth.image }}:{{ .Values.services.auth.tag }}
+        image: {{ .Values.services.auth.image }}@{{ .Values.services.auth.digest | default .Values.services.auth.tag }}
         imagePullPolicy: {{ .Values.global.imagePullPolicy }}
         ports: [{ containerPort: 3001 }]
         resources:

@@ -4,8 +4,8 @@ metadata:
   name: favorites-service
   labels:
     app: favorites-service
-    annotations:
-      argocd-image-updater.argoproj.io/update-strategy: "digest"
+  annotations:
+    argocd-image-updater.argoproj.io/update-strategy: "digest"
 spec:
   replicas: {{ .Values.services.favorites.replicas }}
   selector:
@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: favorites-service
-        image: {{ .Values.services.favorites.image }}:{{ .Values.services.favorites.tag }}
+        image: {{ .Values.services.favorites.image }}@{{ .Values.services.favorites.digest | default .Values.services.favorites.tag }}
         imagePullPolicy: {{ .Values.global.imagePullPolicy }}
         ports: [{ containerPort: 3003 }]
         resources:

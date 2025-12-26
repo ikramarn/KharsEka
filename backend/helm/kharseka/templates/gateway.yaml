@@ -4,8 +4,8 @@ metadata:
   name: api-gateway
   labels:
     {{- include "kharseka.labels" . | nindent 4 }}
-    annotations:
-      argocd-image-updater.argoproj.io/update-strategy: "digest"
+  annotations:
+    argocd-image-updater.argoproj.io/update-strategy: "digest"
 spec:
   replicas: {{ .Values.gateway.replicas }}
   selector:
@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: gateway
-        image: {{ .Values.gateway.image }}:{{ .Values.gateway.tag }}
+        image: {{ .Values.gateway.image }}@{{ .Values.gateway.digest | default .Values.gateway.tag }}
         imagePullPolicy: {{ .Values.global.imagePullPolicy }}
         env:
         - name: AUTH_URL
