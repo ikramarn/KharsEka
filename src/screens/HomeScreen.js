@@ -25,7 +25,7 @@ export default function HomeScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Khars eka ao Bel try ka</Text>
+      <Text style={styles.title}>Raza che drla e Khars ku</Text>
       <Text style={styles.header}>Browse Listings</Text>
       <View style={{ marginBottom: 12 }}>
         <Button title="Create Listing" onPress={() => navigation.navigate('Create')} />
