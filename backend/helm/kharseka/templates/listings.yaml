@@ -5,8 +5,7 @@ metadata:
   labels:
     app: listings-service
   annotations:
-    argocd-image-updater.argoproj.io/update-strategy: "latest"
-    argocd-image-updater.argoproj.io/listings: "${{ secrets.DOCKERHUB_USERNAME }}/kharseka-listings-service"
+     argocd-image-updater.argoproj.io/update-strategy: "latest"
 spec:
   replicas: {{ .Values.services.listings.replicas }}
   selector:
