@@ -12,6 +12,7 @@ on:
 
 jobs:
   build-and-push:
+    environment: DEV_kharseka
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -44,6 +45,7 @@ jobs:
           tags: ghcr.io/ikramarn/kharseka-${{ matrix.service }}:latest
 
   deploy:
+    environment: DEV_kharseka
     needs: build-and-push
     runs-on: ubuntu-latest
     steps:
