@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: auth-service
-        image: {{ .Values.services.auth.image }}@{{ .Values.services.auth.digest | default .Values.services.auth.tag }}
+        image: {{ .Values.services.auth.image }}{{ if .Values.services.auth.digest }}@{{ .Values.services.auth.digest }}{{ else }}:{{ .Values.services.auth.tag }}{{ end }}
         imagePullPolicy: {{ .Values.global.imagePullPolicy }}
         ports: [{ containerPort: 3001 }]
         resources:

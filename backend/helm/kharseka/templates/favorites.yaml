@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: favorites-service
-        image: {{ .Values.services.favorites.image }}@{{ .Values.services.favorites.digest | default .Values.services.favorites.tag }}
+        image: {{ .Values.services.favorites.image }}{{ if .Values.services.favorites.digest }}@{{ .Values.services.favorites.digest }}{{ else }}:{{ .Values.services.favorites.tag }}{{ end }}
         imagePullPolicy: {{ .Values.global.imagePullPolicy }}
         ports: [{ containerPort: 3003 }]
         resources:

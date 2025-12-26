@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: listings-service
-        image: {{ .Values.services.listings.image }}@{{ .Values.services.listings.digest | default .Values.services.listings.tag }}
+        image: {{ .Values.services.listings.image }}{{ if .Values.services.listings.digest }}@{{ .Values.services.listings.digest }}{{ else }}:{{ .Values.services.listings.tag }}{{ end }}
         imagePullPolicy: {{ .Values.global.imagePullPolicy }}
         ports: [{ containerPort: 3002 }]
         resources:
