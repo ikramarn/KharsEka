@@ -36,7 +36,7 @@ jobs:
           context: ./backend/${{ matrix.service }}
           file: ./backend/${{ matrix.service }}/Dockerfile
           push: true
-          tags: ghcr.io/${{ github.repository_owner }}/kharseka-${{ matrix.service }}:latest
+          tags: ghcr.io/ikramarn/kharseka-${{ matrix.service }}:latest
 
   deploy:
     needs: build-and-push
@@ -59,15 +59,15 @@ jobs:
         run: |
           helm upgrade --install kharseka ./backend/helm/kharseka \
             --namespace kharseka --create-namespace \
-            --set gateway.image=ghcr.io/${{ github.repository_owner }}/kharseka-gateway \
+            --set gateway.image=ghcr.io/ikramarn/kharseka-gateway \
             --set gateway.tag=latest \
-            --set services.auth.image=ghcr.io/${{ github.repository_owner }}/kharseka-auth-service \
+            --set services.auth.image=ghcr.io/ikramarn/kharseka-auth-service \
             --set services.auth.tag=latest \
-            --set services.listings.image=ghcr.io/${{ github.repository_owner }}/kharseka-listings-service \
+            --set services.listings.image=ghcr.io/ikramarn/kharseka-listings-service \
             --set services.listings.tag=latest \
-            --set services.favorites.image=ghcr.io/${{ github.repository_owner }}/kharseka-favorites-service \
+            --set services.favorites.image=ghcr.io/ikramarn/kharseka-favorites-service \
             --set services.favorites.tag=latest \
-            --set services.media.image=ghcr.io/${{ github.repository_owner }}/kharseka-media-service \
+            --set services.media.image=ghcr.io/ikramarn/kharseka-media-service \
             --set services.media.tag=latest
         env:
           KUBECONFIG: ${{ secrets.KUBECONFIG }}
