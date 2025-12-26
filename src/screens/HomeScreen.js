@@ -25,6 +25,7 @@ export default function HomeScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
+      <Text style={styles.title}>Kharseka ao Badaleka</Text>
       <Text style={styles.header}>Browse Listings</Text>
       <View style={{ marginBottom: 12 }}>
         <Button title="Create Listing" onPress={() => navigation.navigate('Create')} />
@@ -50,6 +51,17 @@ export default function HomeScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 16 },
+  title: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 16,
+    color: '#2a2a2a',
+    letterSpacing: 1.2,
+    textShadowColor: '#e0e0e0',
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 4,
+  },
   header: { fontSize: 22, fontWeight: '700', marginBottom: 8 },
   search: { borderWidth: 1, borderColor: '#ccc', borderRadius: 8, padding: 12, marginBottom: 12 },
 });
