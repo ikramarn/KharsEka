@@ -16,11 +16,7 @@ spec:
     spec:
       containers:
       - name: auth-service
-        image: {{- if (hasPrefix "sha256:" .Values.services.auth.tag) -}}
-          {{ .Values.services.auth.image }}@{{ .Values.services.auth.tag }}
-        {{- else -}}
-          {{ .Values.services.auth.image }}:{{ .Values.services.auth.tag }}
-        {{- end }}
+        image: {{- if (hasPrefix "sha256:" .Values.services.auth.tag) }}{{ .Values.services.auth.image }}@{{ .Values.services.auth.tag }}{{ else }}{{ .Values.services.auth.image }}:{{ .Values.services.auth.tag }}{{ end }}
         imagePullPolicy: {{ .Values.global.imagePullPolicy }}
         ports: [{ containerPort: 3001 }]
         resources:
