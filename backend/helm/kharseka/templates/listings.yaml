@@ -4,8 +4,8 @@ metadata:
   name: listings-service
   labels:
     app: listings-service
-  annotations:
-     argocd-image-updater.argoproj.io/update-strategy: "latest"
+    annotations:
+      argocd-image-updater.argoproj.io/update-strategy: "digest"
 spec:
   replicas: {{ .Values.services.listings.replicas }}
   selector:

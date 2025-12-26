@@ -4,8 +4,8 @@ metadata:
   name: auth-service
   labels:
     app: auth-service
-  annotations:
-     argocd-image-updater.argoproj.io/update-strategy: "latest"
+    annotations:
+      argocd-image-updater.argoproj.io/update-strategy: "digest"
 spec:
   replicas: {{ .Values.services.auth.replicas }}
   selector:
