@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: listings-service
-        image: {{- if (regexMatch "^sha256:" .Values.services.listings.tag) }}{{ .Values.services.listings.image }}@{{ .Values.services.listings.tag }}{{ else }}{{ .Values.services.listings.image }}:{{ .Values.services.listings.tag }}{{ end }}
+        image: "{{ .Values.services.listings.image }}{{ if (regexMatch "^sha256:" .Values.services.listings.tag) }}@{{ .Values.services.listings.tag }}{{ else }}:{{ .Values.services.listings.tag }}{{ end }}"
         imagePullPolicy: {{ .Values.global.imagePullPolicy }}
         ports: [{ containerPort: 3002 }]
         {{- if .Values.services.listings.resources }}

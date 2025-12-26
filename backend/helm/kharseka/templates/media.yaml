@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: media-service
-        image: {{- if (regexMatch "^sha256:" .Values.services.media.tag) }}{{ .Values.services.media.image }}@{{ .Values.services.media.tag }}{{ else }}{{ .Values.services.media.image }}:{{ .Values.services.media.tag }}{{ end }}
+        image: "{{ .Values.services.media.image }}{{ if (regexMatch "^sha256:" .Values.services.media.tag) }}@{{ .Values.services.media.tag }}{{ else }}:{{ .Values.services.media.tag }}{{ end }}"
         imagePullPolicy: {{ .Values.global.imagePullPolicy }}
         ports: [{ containerPort: 3004 }]
         {{- if .Values.services.media.resources }}

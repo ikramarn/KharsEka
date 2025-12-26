@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: gateway
-        image: {{- if (regexMatch "^sha256:" .Values.gateway.tag) }}{{ .Values.gateway.image }}@{{ .Values.gateway.tag }}{{ else }}{{ .Values.gateway.image }}:{{ .Values.gateway.tag }}{{ end }}
+        image: "{{ .Values.gateway.image }}{{ if (regexMatch "^sha256:" .Values.gateway.tag) }}@{{ .Values.gateway.tag }}{{ else }}:{{ .Values.gateway.tag }}{{ end }}"
         imagePullPolicy: {{ .Values.global.imagePullPolicy }}
         env:
         - name: AUTH_URL
