@@ -1,8 +1,36 @@
+
 import Constants from 'expo-constants';
-const BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL || Constants?.expoConfig?.extra?.apiBaseUrl || 'http://localhost:8080';
+import { Platform } from 'react-native';
+
+function getApiBaseUrl() {
+  // 1. Use env var if set
+  if (process.env.EXPO_PUBLIC_API_BASE_URL) return process.env.EXPO_PUBLIC_API_BASE_URL;
+  // 2. Use app.json extra if set
+  if (Constants?.expoConfig?.extra?.apiBaseUrl) return Constants.expoConfig.extra.apiBaseUrl;
+
+  // 3. Platform-specific logic
+  if (Platform.OS === 'web') {
+    // Use window.location.hostname for web
+    const host = typeof window !== 'undefined' ? window.location.hostname : 'localhost';
+    return `http://${host}:8082`;
+  }
+  if (Platform.OS === 'android') {
+    // Use 10.0.2.2 for emulator, else fallback to LAN IP
+    return 'http://10.0.2.2:8082';
+  }
+  if (Platform.OS === 'ios') {
+    // Use localhost for iOS simulator, else fallback to LAN IP
+    return 'http://localhost:8082';
+  }
+  // Fallback
+  return 'http://localhost:8082';
+}
+
+const BASE_URL = getApiBaseUrl();
 
 async function request(path, { method = 'GET', body, token, headers } = {}) {
-  const res = await fetch(`${BASE_URL}${path}`, {
+  const url = `${BASE_URL}${path}`;
+  const res = await fetch(url, {
     method,
     headers: {
       'Content-Type': 'application/json',
@@ -12,7 +40,7 @@ async function request(path, { method = 'GET', body, token, headers } = {}) {
     ...(body ? { body: JSON.stringify(body) } : {}),
   });
   if (!res.ok) {
-    let err = 'Request failed';
+    let err = `Request failed: ${url}`;
     try { const data = await res.json(); err = data.error || JSON.stringify(data); } catch {}
     throw new Error(err);
   }
