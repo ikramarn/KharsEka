@@ -22,8 +22,8 @@ ingress:
   tlsSecretName: kharseka-tls
 
 gateway:
-  image: api-gateway
-  tag: local
+  image: ghcr.io/YOUR_GITHUB_USERNAME/kharseka-gateway
+  tag: latest
   replicas: 1
   resources:
     requests: { cpu: 100m, memory: 128Mi }
@@ -31,29 +31,29 @@ gateway:
 
 services:
   auth:
-    image: auth-service
-    tag: local
+    image: ghcr.io/YOUR_GITHUB_USERNAME/kharseka-auth-service
+    tag: latest
     replicas: 1
     resources:
       requests: { cpu: 100m, memory: 128Mi }
       limits:   { cpu: 500m, memory: 512Mi }
   listings:
-    image: listings-service
-    tag: local
+    image: ghcr.io/YOUR_GITHUB_USERNAME/kharseka-listings-service
+    tag: latest
     replicas: 1
     resources:
       requests: { cpu: 100m, memory: 128Mi }
       limits:   { cpu: 500m, memory: 512Mi }
   favorites:
-    image: favorites-service
-    tag: local
+    image: ghcr.io/YOUR_GITHUB_USERNAME/kharseka-favorites-service
+    tag: latest
     replicas: 1
     resources:
       requests: { cpu: 100m, memory: 128Mi }
       limits:   { cpu: 500m, memory: 512Mi }
   media:
-    image: media-service
-    tag: local
+    image: ghcr.io/YOUR_GITHUB_USERNAME/kharseka-media-service
+    tag: latest
     replicas: 1
     resources:
       requests: { cpu: 100m, memory: 128Mi }
