@@ -41,8 +41,5 @@ jobs:
         with:
           context: ${{ matrix.service == 'gateway' && './backend/gateway' || format('./backend/services/{0}', matrix.service) }}
           file: ${{ matrix.service == 'gateway' && './backend/gateway/Dockerfile' || format('./backend/services/{0}/Dockerfile', matrix.service) }}
-            --set services.favorites.tag=latest \
-            --set services.media.image=ghcr.io/ikramarn/kharseka-media-service \
-            --set services.media.tag=latest
-        env:
-          KUBECONFIG: ${{ secrets.KUBECONFIG }}
+          push: true
+          tags: ghcr.io/ikramarn/kharseka-${{ matrix.service }}:latest
