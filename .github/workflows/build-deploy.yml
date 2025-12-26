@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        service: [gateway, services/auth-service, services/listings-service, services/favorites-service, services/media-service]
+        service: [gateway, auth-service, listings-service, favorites-service, media-service]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -33,8 +33,8 @@ jobs:
       - name: Build and push ${{ matrix.service }}
         uses: docker/build-push-action@v5
         with:
-          context: ./backend/${{ matrix.service }}
-          file: ./backend/${{ matrix.service }}/Dockerfile
+          context: ./backend/services/${{ matrix.service }}
+          file: ./backend/services/${{ matrix.service }}/Dockerfile
           push: true
           tags: ghcr.io/ikramarn/kharseka-${{ matrix.service }}:latest
 
