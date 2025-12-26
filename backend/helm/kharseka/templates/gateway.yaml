@@ -29,7 +29,7 @@ spec:
           value: http://media-service:3004
         ports: [{ containerPort: 3000 }]
         {{- if .Values.gateway.resources }}
-        resources:
+          resources:
       {{ toYaml .Values.gateway.resources | indent 10 }}
         {{- end }}
         readinessProbe:

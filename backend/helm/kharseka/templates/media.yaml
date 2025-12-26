@@ -20,7 +20,7 @@ spec:
         imagePullPolicy: {{ .Values.global.imagePullPolicy }}
         ports: [{ containerPort: 3004 }]
         {{- if .Values.services.media.resources }}
-        resources:
+          resources:
       {{ toYaml .Values.services.media.resources | indent 10 }}
         {{- end }}
         readinessProbe:
