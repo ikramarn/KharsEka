@@ -6,7 +6,6 @@ metadata:
     app: media-service
   annotations:
     argocd-image-updater.argoproj.io/update-strategy: "latest"
-    argocd-image-updater.argoproj.io/media: "${{ secrets.DOCKERHUB_USERNAME }}/kharseka-media-service"
 spec:
   replicas: {{ .Values.services.media.replicas }}
   selector:
