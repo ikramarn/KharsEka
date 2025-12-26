@@ -19,8 +19,10 @@ spec:
         image: {{- if (regexMatch "^sha256:" .Values.services.media.tag) }}{{ .Values.services.media.image }}@{{ .Values.services.media.tag }}{{ else }}{{ .Values.services.media.image }}:{{ .Values.services.media.tag }}{{ end }}
         imagePullPolicy: {{ .Values.global.imagePullPolicy }}
         ports: [{ containerPort: 3004 }]
+        {{- if .Values.services.media.resources }}
         resources:
-{{ toYaml .Values.services.media.resources | indent 10 }}
+      {{ toYaml .Values.services.media.resources | indent 10 }}
+        {{- end }}
         readinessProbe:
           httpGet: { path: /healthz, port: 3004 }
           initialDelaySeconds: 5
