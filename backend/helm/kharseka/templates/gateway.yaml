@@ -28,10 +28,10 @@ spec:
         - name: MEDIA_URL
           value: http://media-service:3004
         ports: [{ containerPort: 3000 }]
-        {{- if .Values.gateway.resources }}
+  {{- if .Values.gateway.resources }}
           resources:
-      {{ toYaml .Values.gateway.resources | indent 10 }}
-        {{- end }}
+  {{ toYaml .Values.gateway.resources | indent 10 }}
+  {{- end }}
         readinessProbe:
           httpGet: { path: /healthz, port: 3000 }
           initialDelaySeconds: 5
