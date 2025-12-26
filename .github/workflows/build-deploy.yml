@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        service: [gateway, auth-service, listings-service, favorites-service, media-service]
+        service: [gateway, services/auth-service, services/listings-service, services/favorites-service, services/media-service]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
