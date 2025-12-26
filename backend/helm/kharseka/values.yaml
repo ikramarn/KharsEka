@@ -24,7 +24,6 @@ ingress:
 gateway:
   image: ghcr.io/ikramarn/kharseka-gateway
   tag: latest
-  digest: ""
   replicas: 1
   resources:
     requests: { cpu: 100m, memory: 128Mi }
@@ -34,7 +33,6 @@ services:
   auth:
     image: ghcr.io/ikramarn/kharseka-auth-service
     tag: latest
-    digest: ""
     replicas: 1
     resources:
       requests: { cpu: 100m, memory: 128Mi }
@@ -42,7 +40,6 @@ services:
   listings:
     image: ghcr.io/ikramarn/kharseka-listings-service
     tag: latest
-    digest: ""
     replicas: 1
     resources:
       requests: { cpu: 100m, memory: 128Mi }
@@ -50,7 +47,6 @@ services:
   favorites:
     image: ghcr.io/ikramarn/kharseka-favorites-service
     tag: latest
-    digest: ""
     replicas: 1
     resources:
       requests: { cpu: 100m, memory: 128Mi }
@@ -58,7 +54,6 @@ services:
   media:
     image: ghcr.io/ikramarn/kharseka-media-service
     tag: latest
-    digest: ""
     replicas: 1
     resources:
       requests: { cpu: 100m, memory: 128Mi }
