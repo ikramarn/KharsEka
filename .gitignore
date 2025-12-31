@@ -40,3 +40,5 @@ yarn-error.*
 /ios
 /android
 kharseka-image-updater.yaml
+argocd-apps.yaml
+deployments.yaml

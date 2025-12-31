@@ -1,3 +1,39 @@
+
+# KharsEka: Classifieds Platform
+
+KharsEka is a full-stack classifieds app for posting, browsing, and managing listings (e.g., vehicles, items for sale) with user authentication, favorites, and image uploads. It features a React Native frontend and a modular Node.js backend, deployable locally with Kubernetes and Docker Desktop.
+
+## Features
+- User registration, login, and profile management (JWT or Firebase Auth)
+- Create, edit, and delete listings with images (2–8 per listing)
+- Browse, search, and filter listings by category
+- Mark/unmark listings as favorites
+- Upload and serve images securely
+- Responsive mobile UI (React Native/Expo)
+- Microservices backend (Fastify, PostgreSQL, Prometheus metrics)
+- Local Kubernetes deployment with Helm charts
+
+## Architecture
+
+**Frontend:**
+- React Native app (Expo)
+- Screens: Home, Create Listing, Favorites, Profile, Listing Details, Auth (Login/Sign Up)
+- Uses REST API to interact with backend services
+
+**Backend:**
+- API Gateway: Routes requests to microservices
+- Auth Service: User accounts, JWT auth, profile updates
+- Listings Service: CRUD for listings, search/filter
+- Favorites Service: User favorites management
+- Media Service: Image upload/storage/serving
+- PostgreSQL: Shared database for all services
+- Prometheus metrics endpoints for monitoring
+
+**Deployment:**
+- Helm charts for easy local deployment
+- Docker images for each service
+- Kubernetes manifests for DB, secrets, ingress, etc.
+
 # Backend Microservices (Local Kubernetes on Docker Desktop)
 
 ## Helm (recommended)
