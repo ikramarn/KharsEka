@@ -17,7 +17,10 @@ await app.register(replyFrom);
 
 app.all('/auth/*', (req, reply) => reply.from(`${AUTH_URL}${req.raw.url}`));
 app.all('/users/*', (req, reply) => reply.from(`${AUTH_URL}${req.raw.url}`));
+// Forward base and wildcard routes to microservices
+app.all('/listings', (req, reply) => reply.from(`${LISTINGS_URL}${req.raw.url}`));
 app.all('/listings/*', (req, reply) => reply.from(`${LISTINGS_URL}${req.raw.url}`));
+app.all('/favorites', (req, reply) => reply.from(`${FAVORITES_URL}${req.raw.url}`));
 app.all('/favorites/*', (req, reply) => reply.from(`${FAVORITES_URL}${req.raw.url}`));
 app.all('/media/*', (req, reply) => reply.from(`${MEDIA_URL}${req.raw.url}`));
 
