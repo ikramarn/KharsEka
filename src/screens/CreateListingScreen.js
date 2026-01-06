@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Image, ScrollView, Alert } from 'react-native';
+import { Picker } from '@react-native-picker/picker';
 import CategoryPicker, { SUBCATEGORIES } from '../components/CategoryPicker';
 import * as ImagePicker from 'expo-image-picker';
 import { useAuth } from '../context/AuthContext';
